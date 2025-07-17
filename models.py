@@ -66,15 +66,15 @@ class Record:
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 
-    def __str__(self):
-        phones = "; ".join(p.value for p in self.phones)
+    def __str__(self):                            # Метод __str__ використовується для перетворення об'єкта в рядок під час друку.
+        phones = "; ".join(p.value for p in self.phones)    # Цей рядок створює один рядок зі списку номерів, розділений ; (крапка з комою і пробілом).
         bday = f", birthday: {self.birthday.value.strftime('%d.%m.%Y')}" if self.birthday else ""   # Перевіряю чи день народження існує
         return f"Contact name: {self.name.value}, phones: {phones}{bday}"                           # додаю
 
 
 # Клас адресної книги
 class AddressBook(UserDict):
-    def add_record(self, record):
+    def add_record(self, record):                      # record = один контакт (екземпляр (об'єкт) класу Record)
         self.data[record.name.value] = record
 
     def find(self, name):
@@ -87,13 +87,13 @@ class AddressBook(UserDict):
     def get_upcoming_birthdays(self):
         today = datetime.now().date()
         upcoming = []
-        for record in self.data.values():
-            if record.birthday:
-                bday = record.birthday.value.replace(year=today.year)
+        for record in self.data.values():                                 # Проходимося по кожному контакту
+            if record.birthday:                                           # Якщо є день народження
+                bday = record.birthday.value.replace(year=today.year)     # Отримуємо дату ДН цього року
                 if bday < today:
-                    bday = bday.replace(year=today.year + 1)
-                delta = (bday - today).days
-                if 0 <= delta <= 7:
+                    bday = bday.replace(year=today.year + 1)              # Якщо вже минув — беремо наступного року
+                delta = (bday - today).days                               # Обчислюємо кількість днів до ДН
+                if 0 <= delta <= 7:                                       # Якщо менше або дорівнює 7 — додаємо в список
                     upcoming.append(f"{record.name.value}: {bday.strftime('%d.%m.%Y')}")
         return upcoming
     
